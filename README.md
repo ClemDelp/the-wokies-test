@@ -1,4 +1,4 @@
-# Exercice Technique - The Wokies (Version Next.js)
+# Exercice Technique - The Wokies
 
 Cet exercice a pour but d'évaluer vos compétences en **React**, **TypeScript**, **Next.js**, **Supabase**, **Ant Design**, et **Tailwind CSS**, en reproduisant la stack que nous utilisons chez **The Wokies**.
 
@@ -18,7 +18,7 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants :
 
 ## Installation
 
-1. **Cloner** ce repository (ou copiez-en le squelette si fourni).
+1. **Cloner** ce repository.
 
 2. Installez les dépendances du projet :
 
@@ -45,7 +45,7 @@ Le projet Next.js pourrait ressembler à ceci :
 
 ```
 /app
-  page.tsx    # Page d'accueil (Home)
+  /(home)     # Page d'accueil
   /dashboard  # Page du tableau de bord
   /invite     # Page d'invitation
 /shared
