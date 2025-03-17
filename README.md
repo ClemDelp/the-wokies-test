@@ -119,3 +119,11 @@ npm run dev
 2. (Optionnel) Toute note ou documentation supplémentaire dans un `README`.
 
 Nous vous souhaitons bonne chance pour cet exercice et avons hâte de découvrir votre implémentation !
+
+
+## Note
+
+### supabase
+supabase login
+supabase link
+./scripts/init-db.sh

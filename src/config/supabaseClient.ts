@@ -1,8 +1,11 @@
 import {createClient} from "@supabase/supabase-js";
 
-export const supabaseConfig = {
-    url: "http://fakeurl.com",
-    key: "fake-key"
+if (!process.env.NEXT_PUBLIC_PROJECT_URL || !process.env.NEXT_PUBLIC_API_KEY) {
+    console.log('pouette')
+    throw new Error('Missing Supabase environment variables');
 }
 
-export const supabaseClient = createClient(supabaseConfig.url, supabaseConfig.key)
+export const supabaseClient = createClient(
+    process.env.NEXT_PUBLIC_PROJECT_URL,
+    process.env.NEXT_PUBLIC_API_KEY
+)
