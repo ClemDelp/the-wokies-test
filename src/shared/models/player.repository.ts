@@ -1,4 +1,4 @@
-import {Player} from "./player.model";
+import { Player } from "./player.model";
 
 interface ApiResponse<T> {
     data?: T;
@@ -14,7 +14,7 @@ export async function getAllPlayers(): Promise<ApiResponse<Player[]>> {
     try {
         const response = await fetch('/api/players');
         const result = await response.json() as Player[];
-        return {"data":result};
+        return { "data": result };
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch players' };
@@ -43,7 +43,7 @@ export async function addPlayer(name: string, mail: string): Promise<ApiResponse
         });
 
         const result = await response.json() as Player;
-        return {"data":result};
+        return { "data": result };
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to add player' };
