@@ -13,8 +13,8 @@ interface CountResponse {
 export async function getAllPlayers(): Promise<ApiResponse<Player[]>> {
     try {
         const response = await fetch('/api/players');
-        const result = await response.json() as ApiResponse<Player[]>;
-        return result;
+        const result = await response.json() as Player[];
+        return {"data":result};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch players' };
@@ -42,8 +42,8 @@ export async function addPlayer(name: string, mail: string): Promise<ApiResponse
             body: JSON.stringify({ name, mail }),
         });
 
-        const result = await response.json() as ApiResponse<Player>;
-        return result;
+        const result = await response.json() as Player;
+        return {"data":result};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to add player' };

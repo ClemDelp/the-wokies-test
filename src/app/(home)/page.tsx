@@ -1,8 +1,8 @@
 'use client'
 
-import {Button, Flex, Modal, Form, Input} from "antd";
-import {BannerHome} from "./components/banner.home";
-import {PlusSquareOutlined} from "@ant-design/icons";
+import { Button, Flex, Modal, Form, Input, Spin } from "antd";
+import { BannerHome } from "./components/banner.home";
+import { PlusSquareOutlined } from "@ant-design/icons";
 import useHome from "./callbacks/useHome";
 
 export default function Home() {
@@ -10,12 +10,17 @@ export default function Home() {
 
     return (
         <Flex vertical>
-            <BannerHome icon={<PlusSquareOutlined />} title={"Create invitations"}/>
-            <Flex justify={"space-between"} align={"center"} className={"w-full mt-4 pl-4 pr-4 box-border"}>
-                <Button onClick={() => home.setIsModalOpen(true)} type={"primary"} size={"large"}>Add a new player</Button>
-                <p>{home.count} invited player(s)</p>
-            </Flex>
-
+            <BannerHome icon={<PlusSquareOutlined />} title={"Create invitations"} />
+            {home.loading ? (
+                <div className="flex items-center justify-center w-full h-full">
+                    <Spin size="large" tip="Loading..." />
+                </div>
+            ) : (
+                <Flex justify={"space-between"} align={"center"} className={"w-full mt-4 pl-4 pr-4 box-border"}>
+                    <Button onClick={() => home.setIsModalOpen(true)} type={"primary"} size={"large"}>Add a new player</Button>
+                    <p>{home.count} invited player(s)</p>
+                </Flex>
+            )}
             <Modal
                 title="Add New Player"
                 open={home.isModalOpen}

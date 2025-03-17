@@ -20,6 +20,7 @@ export default function useHome() {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             const [playersResponse, countResponse] = await Promise.all([
                 getAllPlayers(),
                 getPlayerCount()
@@ -42,21 +43,21 @@ export default function useHome() {
             if (countResponse.data !== undefined) {
                 setCount(countResponse.data);
             }
+            setLoading(false);
         };
 
         fetchData();
     }, []);
-    
+
     const handleAddPlayer = async (values: AddPlayerForm) => {
         try {
-            setLoading(true);
-        const response = await addPlayer(values.name, values.mail);
-            
+            const response = await addPlayer(values.name, values.mail);
+
             if (response.error) {
                 notification.error({ message: response.error });
                 return;
             }
-
+            
             if (response.data) {
                 setPlayers([...players, response.data]);
                 setCount(prev => prev + 1);
@@ -67,7 +68,6 @@ export default function useHome() {
         } catch (error) {
             notification.error({ message: `Failed to add player: ${error}` });
         } finally {
-            setLoading(false);
         }
     };
 
