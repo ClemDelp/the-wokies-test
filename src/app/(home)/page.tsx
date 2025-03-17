@@ -13,7 +13,7 @@ export default function Home() {
             <BannerHome icon={<PlusSquareOutlined />} title={"Create invitations"}/>
             <Flex justify={"space-between"} align={"center"} className={"w-full mt-4 pl-4 pr-4 box-border"}>
                 <Button onClick={() => home.setIsModalOpen(true)} type={"primary"} size={"large"}>Add a new player</Button>
-                <p>{home.players.length} invited player(s)</p>
+                <p>{home.count} invited player(s)</p>
             </Flex>
 
             <Modal

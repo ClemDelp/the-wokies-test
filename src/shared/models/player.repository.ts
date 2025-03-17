@@ -9,35 +9,30 @@ interface CountResponse {
     count: number;
 }
 
-export async function getAllPlayers(): Promise<Player[] | undefined> {
+
+export async function getAllPlayers(): Promise<ApiResponse<Player[]>> {
     try {
         const response = await fetch('/api/players');
-        if (!response.ok) {
-            throw new Error('Failed to fetch players');
-        }
         const result = await response.json() as ApiResponse<Player[]>;
-        return result.data;
+        return result;
     } catch (e) {
         console.error(e);
-        return undefined;
+        return { error: e instanceof Error ? e.message : 'Failed to fetch players' };
     }
 }
 
-export async function getPlayerCount(): Promise<number | undefined> {
+export async function getPlayerCount(): Promise<ApiResponse<number>> {
     try {
         const response = await fetch('/api/players/count');
-        if (!response.ok) {
-            throw new Error('Failed to fetch player count');
-        }
         const result = await response.json() as CountResponse;
-        return result.count;
+        return { data: result.count };
     } catch (e) {
         console.error(e);
-        return undefined;
+        return { error: e instanceof Error ? e.message : 'Failed to fetch player count' };
     }
 }
 
-export async function addPlayer(name: string, mail: string): Promise<Player | undefined> {
+export async function addPlayer(name: string, mail: string): Promise<ApiResponse<Player>> {
     try {
         const response = await fetch('/api/players', {
             method: 'POST',
@@ -47,14 +42,10 @@ export async function addPlayer(name: string, mail: string): Promise<Player | un
             body: JSON.stringify({ name, mail }),
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to add player');
-        }
-
         const result = await response.json() as ApiResponse<Player>;
-        return result.data;
+        return result;
     } catch (e) {
         console.error(e);
-        return undefined;
+        return { error: e instanceof Error ? e.message : 'Failed to add player' };
     }
 }
