@@ -1,6 +1,6 @@
 'use client';
 
-import { Player } from '@/shared/models/player.model';
+import { Player } from '@/models/player.model';
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 

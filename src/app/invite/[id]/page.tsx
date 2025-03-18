@@ -2,95 +2,87 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Button, Result, Spin } from 'antd';
-import { supabaseClient } from '@/config/supabaseClient';
+import { getPlayerById, updatePlayerState } from '@/services/player.repository';
+import { PlayerState } from '@/models/player.model';
+import { notification, Spin } from 'antd';
+import { Button } from 'antd';
+import { Result } from 'antd';
 
 export default function InvitePage() {
-  const { id } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [success, setSuccess] = useState(false);
 
-  const acceptInvite = async () => {
-    try {
-      setLoading(true);
-      const { error } = await supabaseClient
-        .from('players')
-        .update({ state: 'ACCEPTED' })
-        .eq('id', id);
+    const acceptInvite = async () => {
+        try {
+            setLoading(true);
+            if (!id || Array.isArray(id)) {
+                notification.error({ message: "Invalid player ID" });
+                return;
+            }
+            const { data, error } = await updatePlayerState(id, PlayerState.ACCEPTED);
 
-      if (error) throw error;
-      setSuccess(true);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to accept invitation');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    // Verify the invitation is valid
-    const checkInvite = async () => {
-      try {
-        const { data, error } = await supabaseClient
-          .from('players')
-          .select('*')
-          .eq('id', id)
-          .single();
-
-        if (error) throw error;
-        if (!data) throw new Error('Invitation not found');
-        if (data.state !== 'RECEIVED_INVITE') {
-          throw new Error('Invitation already processed');
+            if (error) throw error;
+            setSuccess(true);
+        } catch (e) {
+            notification.error({ message: e instanceof Error ? e.message : 'Failed to accept invitation' });
+        } finally {
+            setLoading(false);
         }
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Invalid invitation');
-      } finally {
-        setLoading(false);
-      }
     };
 
-    checkInvite();
-  }, [id]);
+    useEffect(() => {
+        // Verify the invitation is valid
+        const checkInvite = async () => {
+            try {
+                if (!id || Array.isArray(id)) {
+                    notification.error({ message: "Invalid player ID" });
+                    return;
+                }
+                const { data, error } = await getPlayerById(id);
+                if (error) throw error;
+                if (!data) throw new Error('Invitation not found');
+                if (data.state !== 'RECEIVED_INVITE') {
+                    throw new Error('Invitation already processed');
+                }
+            } catch (e) {
+                notification.error({ message: e instanceof Error ? e.message : 'Invalid invitation' });
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  if (loading) {
+        checkInvite();
+    }, [id]);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
+
+    if (success) {
+        return (
+            <Result
+                status="success"
+                title="Welcome to The Wokies!"
+                subTitle="Your invitation has been accepted successfully."
+            />
+        );
+    }
+
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Spin size="large" />
-      </div>
+        <Result
+            status="info"
+            title="Accept Invitation"
+            subTitle="Click the button below to accept your invitation to The Wokies"
+            extra={[
+                <Button type="primary" key="accept" onClick={acceptInvite}>
+                    Accept Invitation
+                </Button>
+            ]}
+        />
     );
-  }
-
-  if (error) {
-    return (
-      <Result
-        status="error"
-        title="Invalid Invitation"
-        subTitle={error}
-      />
-    );
-  }
-
-  if (success) {
-    return (
-      <Result
-        status="success"
-        title="Welcome to The Wokies!"
-        subTitle="Your invitation has been accepted successfully."
-      />
-    );
-  }
-
-  return (
-    <Result
-      status="info"
-      title="Accept Invitation"
-      subTitle="Click the button below to accept your invitation to The Wokies"
-      extra={[
-        <Button type="primary" key="accept" onClick={acceptInvite}>
-          Accept Invitation
-        </Button>
-      ]}
-    />
-  );
 } 

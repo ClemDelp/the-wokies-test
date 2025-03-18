@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { Player } from "@/shared/models/player.model";
-import { getAllPlayers, addPlayer, getPlayerCount, sendInvite } from "@/shared/models/player.repository";
+import { Player } from "@/models/player.model";
+import { getAllPlayers, addPlayer, getPlayerCount, sendInvite } from "@/services/player.repository";
 import { notification, Modal, Form, Input } from "antd";
 import '@ant-design/v5-patch-for-react-19';
 
@@ -65,7 +65,7 @@ export default function useHome() {
             notification.error({ message: `Failed to send invitation to player: ${error}` });
         }
     }
-    
+
     const handleAddPlayer = async (values: AddPlayerForm) => {
         try {
             const response = await addPlayer(values.name, values.mail);
