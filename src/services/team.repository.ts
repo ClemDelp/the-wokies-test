@@ -100,4 +100,18 @@ export async function getPlayerTeams(playerId: string): Promise<ApiResponse<Team
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch player teams' };
     }
+}
+
+export async function getAllPlayers(): Promise<ApiResponse<Player[]>> {
+    try {
+        const response = await fetch('/api/players');
+        if (!response.ok) {
+            return {"error": 'Failed to fetch players'};
+        }
+        const players = await response.json() as Player[];
+        return {"data": players};
+    } catch (e) {
+        console.error(e);
+        return { error: e instanceof Error ? e.message : 'Failed to fetch players' };
+    }
 } 

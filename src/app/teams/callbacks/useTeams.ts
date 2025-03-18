@@ -18,6 +18,7 @@ export function useTeams() {
                 notification.error({ message: error });
                 return;
             }
+            
             setTeams(data || []);
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to fetch teams');
