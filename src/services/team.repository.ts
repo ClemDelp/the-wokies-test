@@ -1,44 +1,36 @@
-import { Team, PlayerTeam } from './team.model';
+import { Player } from '@/models/player.model';
+import { Team, PlayerTeam } from '../models/team.model';
+import { ApiResponse } from './common.repository';
 
-interface ApiResponse<T> {
-    data?: T;
-    error?: string;
-}
-
-interface RepositoryResponse<T> {
-    data?: T;
-    error?: string;
-}
-
-export async function getAllTeams(): Promise<RepositoryResponse<Team[]>> {
+export async function getAllTeams(): Promise<ApiResponse<Team[]>> {
     try {
         const response = await fetch('/api/teams');
         if (!response.ok) {
-            throw new Error('Failed to fetch teams');
+            return {"error": 'Failed to fetch teams'};
         }
-        const result = await response.json() as ApiResponse<Team[]>;
-        return result;
+        const teams = await response.json() as Team[];
+        return {"data": teams};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch teams' };
     }
 }
 
-export async function getTeam(id: string): Promise<RepositoryResponse<Team>> {
+export async function getTeam(id: string): Promise<ApiResponse<Team>> {
     try {
         const response = await fetch(`/api/teams/${id}`);
         if (!response.ok) {
-            throw new Error('Failed to fetch team');
+            return {"error": 'Failed to fetch team'}
         }
-        const result = await response.json() as ApiResponse<Team>;
-        return result;
+        const team = await response.json() as Team;
+        return {"data": team};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch team' };
     }
 }
 
-export async function addTeam(name: string): Promise<RepositoryResponse<Team>> {
+export async function addTeam(name: string): Promise<ApiResponse<Team>> {
     try {
         const response = await fetch('/api/teams', {
             method: 'POST',
@@ -49,18 +41,18 @@ export async function addTeam(name: string): Promise<RepositoryResponse<Team>> {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to add team');
+            return {"error": 'Failed to add team'}
         }
 
-        const result = await response.json() as ApiResponse<Team>;
-        return result;
+        const team = await response.json() as Team;
+        return {"data": team};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to add team' };
     }
 }
 
-export async function addPlayerToTeam(playerId: string, teamId: string): Promise<RepositoryResponse<PlayerTeam>> {
+export async function addPlayerToTeam(playerId: string, teamId: string): Promise<ApiResponse<PlayerTeam>> {
     try {
         const response = await fetch('/api/teams/players', {
             method: 'POST',
@@ -71,39 +63,39 @@ export async function addPlayerToTeam(playerId: string, teamId: string): Promise
         });
 
         if (!response.ok) {
-            throw new Error('Failed to add player to team');
+            return {"error": "Failed to add player to team"}
         }
 
-        const result = await response.json() as ApiResponse<PlayerTeam>;
-        return result;
+        const player = await response.json() as PlayerTeam;
+        return {"data": player};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to add player to team' };
     }
 }
 
-export async function getTeamPlayers(teamId: string): Promise<RepositoryResponse<Player[]>> {
+export async function getTeamPlayers(teamId: string): Promise<ApiResponse<Player[]>> {
     try {
         const response = await fetch(`/api/teams/${teamId}/players`);
         if (!response.ok) {
-            throw new Error('Failed to fetch team players');
+            return {"error": "Failed to fetch team players"}
         }
-        const result = await response.json() as ApiResponse<Player[]>;
-        return result;
+        const players = await response.json() as Player[];
+        return {"data": players};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch team players' };
     }
 }
 
-export async function getPlayerTeams(playerId: string): Promise<RepositoryResponse<Team[]>> {
+export async function getPlayerTeams(playerId: string): Promise<ApiResponse<Team[]>> {
     try {
         const response = await fetch(`/api/players/${playerId}/teams`);
         if (!response.ok) {
-            throw new Error('Failed to fetch player teams');
+            return {"error": "Failed to fetch player teams"}
         }
-        const result = await response.json() as ApiResponse<Team[]>;
-        return result;
+        const teams = await response.json() as Team[];
+        return {"data": teams};
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to fetch player teams' };
