@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { getPlayerById, updatePlayerState } from '@/services/player.repository';
+import { getPlayerById, updatePlayerState } from '@/repositories/player.repository';
 import { PlayerState } from '@/models/player.model';
 import { notification, Spin } from 'antd';
 import { Button } from 'antd';
@@ -22,7 +22,11 @@ export default function InvitePage() {
             }
             const { data, error } = await updatePlayerState(id, PlayerState.ACCEPTED);
 
-            if (error) throw error;
+            if (error) {
+                notification.error({ message: error.message })
+                return;
+            };
+
             setSuccess(true);
         } catch (e) {
             notification.error({ message: e instanceof Error ? e.message : 'Failed to accept invitation' });

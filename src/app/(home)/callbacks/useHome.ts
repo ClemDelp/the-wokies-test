@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Player } from "@/models/player.model";
-import { getAllPlayers, addPlayer, getPlayerCount, sendInvite } from "@/services/player.repository";
+import { getAllPlayers, addPlayer, getPlayerCount, sendInvite } from "@/services/player.service";
 import { notification, Modal, Form, Input } from "antd";
 import '@ant-design/v5-patch-for-react-19';
 
@@ -52,7 +52,6 @@ export default function useHome() {
     const sendInvitationEmail = async (player: Player) =>{
         try {
             const response = await sendInvite(player);
-            
             if (response.error) {
                 notification.error({ message: response.error });
                 return;

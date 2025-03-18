@@ -10,7 +10,3 @@ export interface Player {
     mail: string
     state: PlayerState
 }
-
-export interface CountResponse {
-    count: number;
-}

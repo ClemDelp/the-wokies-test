@@ -1,7 +1,7 @@
 'use client';
 
 import { Modal, Form, Input, notification } from 'antd';
-import { addTeam } from '@/services/team.repository';
+import { addTeam } from '@/services/team.service';
 
 interface AddTeamModalProps {
     isOpen: boolean;

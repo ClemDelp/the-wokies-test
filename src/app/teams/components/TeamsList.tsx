@@ -2,10 +2,10 @@
 
 import { Team } from '@/models/team.model';
 import { Player } from '@/models/player.model';
-import { Table, Button, Modal, Select, message } from 'antd';
+import { Table, Button, Modal, Select, notification } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
-import { getTeamPlayers, addPlayerToTeam, getAllPlayers } from '@/services/team.repository';
+import { getTeamPlayers, addPlayerToTeam, getAllPlayers } from '@/services/team.service';
 
 interface TeamsListProps {
     teams: Team[];
@@ -26,6 +26,9 @@ export function TeamsList({ teams, loading }: TeamsListProps) {
             if (data) {
                 setAvailablePlayers(data);
             }
+            if (error) {
+                notification.error({ message: 'Failed to fetch available players' });
+            }
         };
         fetchAvailablePlayers();
     }, []);
@@ -38,11 +41,13 @@ export function TeamsList({ teams, loading }: TeamsListProps) {
                     if (data) {
                         setTeamPlayers(prev => ({ ...prev, [teamId as string]: data }));
                     }
+                    if (error) {
+                        notification.error({ message: 'Failed to fetch team players' });
+                    }
                 }
             });
             await Promise.all(promises);
         };
-
         fetchTeamPlayers();
     }, [expandedRowKeys]);
 
@@ -83,8 +88,13 @@ export function TeamsList({ teams, loading }: TeamsListProps) {
         if (!selectedTeam || !selectedPlayer) return;
 
         const { data, error } = await addPlayerToTeam(selectedPlayer, selectedTeam.id);
+        if (error) {
+            notification.error({ message: error || 'Failed to add player to team' });
+            return;
+        }
+
         if (data) {
-            message.success('Player added to team successfully');
+            notification.success({ message: 'Player added to team successfully' });
             // Refresh the team's players
             const { data: updatedPlayers, error: fetchError } = await getTeamPlayers(selectedTeam.id);
             if (updatedPlayers) {
@@ -92,17 +102,15 @@ export function TeamsList({ teams, loading }: TeamsListProps) {
             }
             setIsAddPlayerModalVisible(false);
             setSelectedPlayer(null);
-        } else {
-            message.error('Failed to add player to team');
-        }
+        }     
     };
 
     const expandedRowRender = (record: Team) => {
         return (
             <div>
                 <div className="mb-4">
-                    <Button 
-                        type="primary" 
+                    <Button
+                        type="primary"
                         onClick={() => {
                             setSelectedTeam(record);
                             setIsAddPlayerModalVisible(true);

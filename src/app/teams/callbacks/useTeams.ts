@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Team } from '@/models/team.model';
-import { getAllTeams } from '@/services/team.repository';
+import { getAllTeams } from '@/services/team.service';
 import { notification } from 'antd';
 
 export function useTeams() {

@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { Player } from '@/models/player.model';
-import { getPlayers, insertPlayer } from '@/services/player.repository';
+import { insertPlayer, getPlayers } from '@/repositories/player.repository';
 
 export async function GET() {
   try {
     const { data, error } = await getPlayers();
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error }, { status: 500 });
     }
 
     return NextResponse.json(data as Player[]);
