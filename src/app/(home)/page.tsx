@@ -4,6 +4,7 @@ import { Button, Flex, Modal, Form, Input, Spin } from "antd";
 import { BannerHome } from "./components/banner.home";
 import { PlusSquareOutlined } from "@ant-design/icons";
 import useHome from "./callbacks/useHome";
+import { PlayersList } from "./components/playersList";
 
 export default function Home() {
     const home = useHome();
@@ -21,6 +22,7 @@ export default function Home() {
                     <p>{home.count} invited player(s)</p>
                 </Flex>
             )}
+            <PlayersList players={home.players} loading={home.loading} />
             <Modal
                 title="Add New Player"
                 open={home.isModalOpen}
