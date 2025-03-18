@@ -41,11 +41,28 @@ export async function addPlayer(name: string, mail: string): Promise<ApiResponse
             },
             body: JSON.stringify({ name, mail }),
         });
-
         const result = await response.json() as Player;
         return { "data": result };
     } catch (e) {
         console.error(e);
         return { error: e instanceof Error ? e.message : 'Failed to add player' };
+    }
+}
+
+
+export async function sendInvite(player: Player): Promise<ApiResponse<String>> {
+    try {
+        // Send invitation email
+        await fetch('/api/players/invite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ player: player }),
+        });
+        return {"data": "ok"};
+    } catch (e) {
+        console.error(e);
+        return { error: e instanceof Error ? e.message : 'Failed to send invite' };
     }
 }

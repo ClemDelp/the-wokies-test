@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Player } from "@/shared/models/player.model";
-import { getAllPlayers, addPlayer, getPlayerCount } from "@/shared/models/player.repository";
+import { getAllPlayers, addPlayer, getPlayerCount, sendInvite } from "@/shared/models/player.repository";
 import { notification, Modal, Form, Input } from "antd";
 import '@ant-design/v5-patch-for-react-19';
 
@@ -49,6 +49,23 @@ export default function useHome() {
         fetchData();
     }, []);
 
+    const sendInvitationEmail = async (player: Player) =>{
+        try {
+            const response = await sendInvite(player);
+            
+            if (response.error) {
+                notification.error({ message: response.error });
+                return;
+            }
+
+            if (response.data) {
+                notification.success({ message: 'Invitation sent at ' + player.mail });
+            }
+        } catch (error) {
+            notification.error({ message: `Failed to send invitation to player: ${error}` });
+        }
+    }
+    
     const handleAddPlayer = async (values: AddPlayerForm) => {
         try {
             const response = await addPlayer(values.name, values.mail);
@@ -57,17 +74,17 @@ export default function useHome() {
                 notification.error({ message: response.error });
                 return;
             }
-            
+
             if (response.data) {
                 setPlayers([...players, response.data]);
                 setCount(prev => prev + 1);
                 setIsModalOpen(false);
                 form.resetFields();
                 notification.success({ message: 'Player added successfully' });
+                sendInvitationEmail(response.data);
             }
         } catch (error) {
             notification.error({ message: `Failed to add player: ${error}` });
-        } finally {
         }
     };
 

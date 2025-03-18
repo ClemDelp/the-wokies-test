@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
+    "@getbrevo/brevo": "^2.2.0",
     "@supabase/supabase-js": "^2.48.1",
     "antd": "^5.18.2",
     "next": "15.1.6",
